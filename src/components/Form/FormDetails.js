@@ -50,20 +50,21 @@ function FormDetails() {
     valueChangeHandler: notesChangeHandler,
   } = useInput(initialNotes, value => value.trim() !== '');
 
-  let formIsValid = false;
-
-  if (
+  let formIsValid =
     nameInputIsValid &&
     emailInputIsValid &&
     phoneInputIsValid &&
     genderInputIsValid &&
-    notesInputIsValid
-  ) {
-    formIsValid = true;
-  }
+    notesInputIsValid;
 
   const onEdit = () => {
     setIsEditing(prevState => setIsEditing(!prevState));
+  };
+
+  const enterHandler = e => {
+    if (formIsValid && e.keyCode === 13) {
+      onEdit();
+    }
   };
 
   const submitHandler = e => {
@@ -71,7 +72,7 @@ function FormDetails() {
   };
 
   return (
-    <form onSubmit={submitHandler}>
+    <form onSubmit={submitHandler} onKeyUp={enterHandler}>
       <div className='grid'>
         <div className='grid__block'>
           <label>
@@ -85,7 +86,7 @@ function FormDetails() {
 
             <input
               type='text'
-              className='field'
+              className={`field ${!nameInputIsValid && 'invalid--'}`}
               name='name'
               value={enteredName}
               id='name'
@@ -114,7 +115,7 @@ function FormDetails() {
 
             <input
               type='email'
-              className='field'
+              className={`field ${!emailInputIsValid && 'invalid--'}`}
               name='email'
               value={enteredEmail}
               style={{ display: `${isEditing ? '' : 'none'}` }}
@@ -149,7 +150,7 @@ function FormDetails() {
 
             <input
               type='tel'
-              className='field'
+              className={`field ${!phoneInputIsValid && 'invalid--'}`}
               name='contact'
               value={enteredPhone}
               style={{ display: `${isEditing ? '' : 'none'}` }}
@@ -183,7 +184,7 @@ function FormDetails() {
             </div>
 
             <select
-              className='field'
+              className={`field ${!genderInputIsValid && 'invalid--'}`}
               name='gender'
               style={{ display: `${isEditing ? '' : 'none'}` }}
               id='gender'
@@ -218,7 +219,7 @@ function FormDetails() {
 
             <textarea
               name='notes'
-              className='field'
+              className={`field ${!notesInputIsValid && 'invalid--'}`}
               style={{ display: `${isEditing ? '' : 'none'}` }}
               id='notes'
               onChange={notesChangeHandler}
